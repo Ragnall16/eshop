@@ -35,4 +35,20 @@ public class ProductController {
         model.addAttribute("products", allProducts);
         return "productList";
     }
+
+    @GetMapping("/edit/{productId}")
+    public String editProductPage(@PathVariable String productId, Model model) {
+        Product product = service.findAll().stream()
+                .filter(p -> p.getProductId().equals(productId))
+                .findFirst()
+                .orElse(null);
+        model.addAttribute("product", product);
+        return "EditProduct";
+    }
+
+    @PostMapping("/edit")
+    public String editProductPost(@ModelAttribute Product product, Model model) {
+        service.update(product);
+        return "redirect:list";
+    }
 }
