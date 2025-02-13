@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Iterator;
 
@@ -62,5 +61,60 @@ class ProductRepositoryTest {
         savedProduct = productIterator.next();
         assertEquals(product2.getProductId(), savedProduct.getProductId());
         assertFalse(productIterator.hasNext());
+    }
+
+    @Test
+    void testEditProductSuccess() {
+        Product product = new Product();
+        product.setProductName("Manchester United Home Jersey 24/25 ");
+        product.setProductQuantity(7);
+        productRepository.create(product);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId(product.getProductId());
+        updatedProduct.setProductName("Manchester United Away Jersey 23/24 ");
+        updatedProduct.setProductQuantity(8);
+
+        Product result = productRepository.update(updatedProduct);
+        assertNotNull(result);
+        assertEquals("Manchester United Away Jersey 23/24 ", result.getProductName());
+        assertEquals(8, result.getProductQuantity());
+    }
+
+    @Test
+    void testEditProductFailure() {
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("e3274332-7c8c-4d38-b3e7-1b2f3e9fd431"); // Non Existent ID
+        updatedProduct.setProductName("GOAT");
+        updatedProduct.setProductQuantity(7);
+
+        Product result = productRepository.update(updatedProduct);
+        assertNull(result);
+    }
+
+    @Test
+    void testDeleteProductSuccess() {
+        Product product = new Product();
+        product.setProductName("DELETED FILES");
+        product.setProductQuantity(42);
+        product = productRepository.create(product);
+
+        productRepository.delete(product.getProductId());
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertFalse(productIterator.hasNext());
+    }
+
+    @Test
+    void testDeleteProductFailure() {
+        Product product = new Product();
+        product.setProductName("Samsung S23 Ultra");
+        product.setProductQuantity(1);
+        product = productRepository.create(product);
+
+        productRepository.delete("e3274332-7c8c-4d38-b3e7-1b2f3e9fd431"); // Non Existent ID
+
+        Iterator<Product> productIterator = productRepository.findAll();
+        assertTrue(productIterator.hasNext());
     }
 }
