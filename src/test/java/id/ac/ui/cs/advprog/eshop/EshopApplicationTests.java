@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 class EshopApplicationTests {
-
     @Test
     void contextLoads() {
+        // No implementation needed – verifies context startup
     }
 
     @Test
