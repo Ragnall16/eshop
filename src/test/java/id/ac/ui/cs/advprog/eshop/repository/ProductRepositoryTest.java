@@ -117,7 +117,7 @@ class ProductRepositoryTest {
         Product product = new Product();
         product.setProductName("Samsung S23 Ultra");
         product.setProductQuantity(1);
-        product = productRepository.create(product);
+        productRepository.create(product);
 
         productRepository.delete("e3274332-7c8c-4d38-b3e7-1b2f3e9fd431"); // Non Existent ID
 
