@@ -83,8 +83,13 @@ class ProductRepositoryTest {
 
     @Test
     void testEditProductFailure() {
+        Product existingProduct = new Product();
+        existingProduct.setProductName("Manchester United Home Jersey 24/25 ");
+        existingProduct.setProductQuantity(7);
+        productRepository.create(existingProduct);
+
         Product updatedProduct = new Product();
-        updatedProduct.setProductId("e3274332-7c8c-4d38-b3e7-1b2f3e9fd431"); // Non Existent ID
+        updatedProduct.setProductId("e3274332-7c8c-4d38-b3e7-1b2f3e9fd431"); // Non-matching ID
         updatedProduct.setProductName("GOAT");
         updatedProduct.setProductQuantity(7);
 
