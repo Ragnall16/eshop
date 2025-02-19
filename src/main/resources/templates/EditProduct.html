@@ -9,6 +9,7 @@
 
 <div class="container">
     <h3>Edit Product</h3>
+    <a th:href="@{/product/list}" class="btn btn-primary mt-3">Product List</a>
 
     <form th:action="@{/product/edit}" th:object="${product}" method="post">
         <input type="hidden" th:field="*{productId}" />
