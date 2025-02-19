@@ -7,7 +7,8 @@ Ragnall Muhammad Al Fath ~ 2306210550 ~ AdPro B
 
 
 [Reflection 1](#Reflection-1) <br>
-[Reflection 2](#Reflection-2) <br> 
+[Reflection 2](#Reflection-2) <br>
+[Reflection 3](#Reflection-3) (Module 2 Reflection) <br>
 
 </strong>
 
@@ -88,3 +89,221 @@ If the test data is hardcoded in multiple places, it becomes harder to maintain.
 
 ---
 
+## Reflection 3
+
+### Code Quality Issues from SonarCloud that I fixed:
+
+### 1. Group dependencies by their destination 
+
+Previous Code
+```Java
+// build.gradle.kts
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("org.projectlombok:lombok")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
+    testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
+    testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+}
+```
+**To fix this issue, I grouped together testImplementation and testRuntimeOnly**
+
+Fixed Code
+```Java
+// build.gradle.kts
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("org.projectlombok:lombok")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.projectlombok:lombok")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+    testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
+    testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
+    testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+```
+
+### 2. Use constructor injection instead of field injection (2x)
+
+Previous Code
+```Java
+// ProductServiceImpl.java
+
+@Autowired
+private ProductRepository productRepository;
+
+// ProductController.java
+
+@Autowired
+private ProductService service;
+```
+
+**To fix this issue, I changed the Autowired injection from field injection to an injection on the class constructor**
+
+Fixed Code
+```Java
+// ProductServiceImpl.java
+
+private final ProductRepository productRepository;
+
+@Autowired
+public ProductServiceImpl(ProductRepository productRepository) {
+    this.productRepository = productRepository;
+}
+
+// ProductController.java
+
+private final ProductService service;
+
+@Autowired
+public ProductController(ProductService service) {
+    this.service = service;
+}
+```
+
+### 3. Add a nested comment explaining why this method is empty
+
+Previous Code
+```Java
+// EshopApplicationTests.java
+
+@Test
+void contextLoads() {
+}
+
+// ProductRepositoryTest.java
+
+@BeforeEach
+void setUp() {
+}
+```
+
+**To fix this issue, is pretty self-explanatory, I just put a comment inside the method explaining why that method is empty**
+
+Fixed Code
+```Java
+// EshopApplicationTests.java
+
+@Test
+void contextLoads() {
+    // No implementation needed – verifies context startup
+}
+
+// ProductRepositoryTest.java
+
+@BeforeEach
+void setUp() {
+    // This method is intentionally left empty.
+    // If necessary, initialize common test dependencies here.
+}
+```
+
+### 4. Remove the declaration of thrown exception 'java.lang.Exception'
+
+Previous Code
+```Java
+// HomePageFunctionalTest.java
+
+@Test
+    void pageTitle_isCorrect(ChromeDriver driver) throws Exception{
+    ...
+}
+
+@Test
+void welcomeMessage_homePage_isCorrect(ChromeDriver driver) throws Exception{
+    ...
+}
+```
+
+**To fix this issue, also pretty self-explanatory, I removed "throws Exception"**
+
+Fixed Code
+```Java
+// HomePageFunctionalTest.java
+
+@Test
+    void pageTitle_isCorrect(ChromeDriver driver) {
+    ...
+}
+
+@Test
+void welcomeMessage_homePage_isCorrect(ChromeDriver driver) {
+    ...
+}
+```
+
+### 5. Remove useless assignment to local variable 'product'
+
+Previous Code
+```Java
+// ProductRepositoryTest.java
+
+void testDeleteProductFailure() {
+    Product product = new Product();
+    product.setProductName("Samsung S23 Ultra");
+    product.setProductQuantity(1);
+    product = productRepository.create(product);
+
+    productRepository.delete("e3274332-7c8c-4d38-b3e7-1b2f3e9fd431"); // Non Existent ID
+
+    Iterator<Product> productIterator = productRepository.findAll();
+    assertTrue(productIterator.hasNext());
+}
+```
+
+**To fix this issue, I just put productRepository.create(product); instead of assigning it to a variable since it is not needed**
+
+Fixed Code
+```Java
+// ProductRepositoryTest.java
+
+@Test
+void testDeleteProductFailure() {
+    Product product = new Product();
+    product.setProductName("Samsung S23 Ultra");
+    product.setProductQuantity(1);
+    productRepository.create(product);
+
+    productRepository.delete("e3274332-7c8c-4d38-b3e7-1b2f3e9fd431"); // Non Existent ID
+
+    Iterator<Product> productIterator = productRepository.findAll();
+    assertTrue(productIterator.hasNext());
+}
+```
+
+
+### CI/CD 
+What are the requirements an app needs to achieve to be able to say it has met 
+the definition of Continuous Integration and Continuous Deployment, 
+I think there are three main ones:
+1. Continuous Integration
+
+    - ci.yml runs unit tests when there is a push / pull request. 
+    - scorecard.yml checks the repository's supply chain security
+    - sonarcloud.yml performs static code analysis to detect bugs, vulnerabilities, and maintainability issues
+    - The workflow ensures the app is consistently tested in a standardized environment (Java 21 on Ubuntu)
+
+2. Continuous Deployment
+
+    - Autodeploy to Koyeb when the main branch is updated (push / pull request to main branch)
+
+3. Stable and Reliable in Delivery
+
+    - If a test fails, the deployment is stopped so a broken code will not go to production
+    - Scorecard and SonarCloud ensures Security and Code Quality
+    - Every commit triggers the same automated steps, eliminating human errors and inconsistencies
