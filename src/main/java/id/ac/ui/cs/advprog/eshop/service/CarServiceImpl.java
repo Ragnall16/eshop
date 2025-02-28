@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Service
-public class CarServiceImpl implements Findable<Car>, Modifiable<Car> {
+public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
 
