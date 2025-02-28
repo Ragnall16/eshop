@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl implements AbstractService<Product> {
+public class ProductServiceImpl implements Findable<Product>, Modifiable<Product> {
 
     private final ProductRepository productRepository;
 

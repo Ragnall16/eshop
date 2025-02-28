@@ -1,7 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.service.ProductService;
+import id.ac.ui.cs.advprog.eshop.service.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ class ProductControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ProductService productService;
+    private ProductServiceImpl productService;
 
     private Product product1;
     private Product product2;
@@ -104,6 +104,6 @@ class ProductControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/list"));
 
-        verify(productService, times(1)).delete(product1.getProductId());
+        verify(productService, times(1)).deleteById(product1.getProductId());
     }
 }
