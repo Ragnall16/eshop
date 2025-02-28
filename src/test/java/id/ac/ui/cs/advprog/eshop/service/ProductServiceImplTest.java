@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ProductServiceImplTest {
@@ -89,5 +89,22 @@ class ProductServiceImplTest {
 
         // Assert
         verify(productRepository, times(1)).delete(productId);
+    }
+
+    @Test
+    void testFindById() {
+        Product product = new Product();
+        product.setProductId("123");
+        product.setProductName("Test Product");
+
+        when(productRepository.findById("123")).thenReturn(product);
+
+        Product foundProduct = productService.findById("123");
+
+        assertNotNull(foundProduct);
+        assertEquals("123", foundProduct.getProductId());
+        assertEquals("Test Product", foundProduct.getProductName());
+
+        verify(productRepository, times(1)).findById("123");
     }
 }

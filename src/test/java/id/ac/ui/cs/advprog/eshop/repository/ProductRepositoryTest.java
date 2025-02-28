@@ -10,6 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 class ProductRepositoryTest {
@@ -38,7 +41,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void testFindAllfEmpty() {
+    void testFindAllifEmpty() {
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
     }
@@ -123,5 +126,24 @@ class ProductRepositoryTest {
 
         Iterator<Product> productIterator = productRepository.findAll();
         assertTrue(productIterator.hasNext());
+    }
+
+    @Test
+    public void testFindById() {
+        ProductRepository productRepository = new ProductRepository();
+        Product product = new Product();
+        product.setProductName("Laptop");
+        product.setProductQuantity(10);
+        product = productRepository.create(product);
+        String productId = product.getProductId();
+
+        Product foundProduct = productRepository.findById(productId);
+        assertNotNull(foundProduct);
+        assertEquals(productId, foundProduct.getProductId());
+        assertEquals("Laptop", foundProduct.getProductName());
+        assertEquals(10, foundProduct.getProductQuantity());
+
+        Product notFoundProduct = productRepository.findById("non-existent-id");
+        assertNull(notFoundProduct);
     }
 }
