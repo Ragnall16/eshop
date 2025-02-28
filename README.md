@@ -16,6 +16,7 @@ Ragnall Muhammad Al Fath ~ 2306210550 ~ AdPro B
 [Reflection 1](#Reflection-1) <br>
 [Reflection 2](#Reflection-2) <br>
 [Reflection 3](#Reflection-3) (Module 2 Reflection) <br>
+[Reflection 4](#Reflection-4) (Module 3 Reflection) <br>
 
 </strong>
 
@@ -314,3 +315,48 @@ I think there are three main ones:
     - If a test fails, the deployment is stopped so a broken code will not go to production
     - Scorecard and SonarCloud ensures Security and Code Quality
     - Every commit triggers the same automated steps, eliminating human errors and inconsistencies
+
+
+---
+
+## Reflection 4
+
+### 1. The Principles I applied to this project
+
+1. Single Responsibility Principle (SRP): Separated CarController from ProductController to ensure each class has only one responsibility.
+
+2. Open/Closed Principle (OCP): Introduced abstract classes for Service and Repository so new functionalities can be added without modifying existing code.
+   
+3. Liskov Substitution Principle (LSP): Removed redundant service interfaces, ensuring that subclasses can replace their base classes without breaking functionality.
+   
+4. Interface Segregation Principle (ISP): Replaced AbstractService<T> with Findable<T> and Modifiable<T> so classes only depend on the methods they actually use.
+   
+5. Dependency Inversion Principle (DIP): Re-added CarService and ProductService to prevent controllers from depending on concrete implementations, ensuring dependency on abstractions instead.
+
+### 2. Advantage of Applying SOLID principles to my project
+
+1. SRP Example: By separating CarController from ProductController, we reduce complexity and make each controller easier to manage, modify, and test.
+
+2. OCP Example: With abstract service and repository classes, we can add new services (e.g., BikeService) without modifying existing services.
+   
+3. LSP Example: Removing redundant interfaces ensures that substituting a CarService with a VehicleService won’t break existing functionality.
+   
+4. ISP Example: By splitting AbstractService<T>, CarService now only implements methods relevant to cars rather than being forced to implement unrelated methods.
+   
+5. DIP Example: Controllers now depend on interfaces rather than concrete service implementations, making the system more flexible and easier to test with mock dependencies.
+
+
+### 3. Disadvantages of Not Applying SOLID Principles to my project
+
+1. SRP: If CarController and ProductController were combined, a change in one part (e.g., adding a new car feature) might unintentionally affect products.
+   
+2. OCP: If services didn’t use abstract classes, every time a new feature was added, existing classes might require modifications, increasing the risk of introducing bugs.
+   
+3. LSP: If a subclass (CarService) introduced behavior that its parent (VehicleService) didn’t expect, substituting one for another could lead to runtime errors.
+   
+4. ISP: A generic AbstractService<T> forces implementations to include unnecessary methods, making classes bulkier and violating encapsulation.
+   
+5. DIP: If controllers directly depended on concrete implementations, changing the database or adding caching layers would require modifying the controllers, leading to tight coupling and less flexibility.
+
+
+---
