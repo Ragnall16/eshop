@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
+import id.ac.ui.cs.advprog.eshop.model.Car;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Service
-public class ProductServiceImpl implements ProductService {
-
+public class ProductServiceImpl implements AbstractService<Product> {
 
     private final ProductRepository productRepository;
 
@@ -35,13 +35,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product findById(String productId) {
+        return productRepository.findById(productId);
+    }
+
+    @Override
     public Product update(Product product) {
         productRepository.update(product);
         return product;
     }
 
     @Override
-    public void delete(String productId) {
+    public void deleteById(String productId) {
         productRepository.delete(productId);
     }
 }

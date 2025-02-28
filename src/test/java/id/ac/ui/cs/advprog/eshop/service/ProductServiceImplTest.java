@@ -85,7 +85,7 @@ class ProductServiceImplTest {
         String productId = "1";
 
         // Act
-        productService.delete(productId);
+        productService.deleteById(productId);
 
         // Assert
         verify(productRepository, times(1)).delete(productId);
