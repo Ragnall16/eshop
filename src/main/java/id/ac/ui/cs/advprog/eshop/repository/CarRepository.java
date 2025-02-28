@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class CarRepository {
+public class CarRepository implements AbstractRepository<Car>{
 
     static int id = 0;
 
@@ -35,10 +35,10 @@ public class CarRepository {
         return null;
     }
 
-    public Car update(String id, Car updatedCar) {
+    public Car update(Car updatedCar) {
         for (int i = 0; i < carData.size(); i++) {
             Car car = carData.get(i);
-            if (car.getCarId().equals(id)) {
+            if (car.getCarId().equals(updatedCar.getCarId())) {
                 car.setCarName(updatedCar.getCarName());
                 car.setCarColor(updatedCar.getCarColor());
                 car.setCarQuantity(updatedCar.getCarQuantity());

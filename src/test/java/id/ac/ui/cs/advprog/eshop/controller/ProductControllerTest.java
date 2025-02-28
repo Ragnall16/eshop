@@ -104,6 +104,6 @@ class ProductControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/list"));
 
-        verify(productService, times(1)).delete(product1.getProductId());
+        verify(productService, times(1)).deleteById(product1.getProductId());
     }
 }
