@@ -31,18 +31,6 @@ public class PaymentRepository {
         return payment;
     }
 
-    public void update(Payment payment, String status) {
-        Order order = this.getOrder(payment.getId());
-        payment.setStatus(status);
-        if (status.equals(PaymentStatus.SUCCESS.getValue())) {
-            order.setStatus(OrderStatus.SUCCESS.getValue());
-        } else if (status.equals(PaymentStatus.REJECTED.getValue())) {
-            order.setStatus(OrderStatus.FAILED.getValue());
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
-
     public Payment findById(String paymentId) {
         for (Payment savedPayment : paymentData) {
             if (savedPayment.getId().equals(paymentId)) {
