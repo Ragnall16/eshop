@@ -80,22 +80,31 @@ public class PaymentServiceImplTest {
     }
 
     @Test
+    void testSetStatusToSuccess(){
+        Payment payment = payments.get(0);
+
+        when(paymentRepository.getOrder(payment.getId())).thenReturn(order);
+        when(paymentRepository.save(any(Order.class), any(Payment.class))).thenReturn(payment);
+        when(orderService.updateStatus(anyString(), anyString())).thenReturn(order);
+
+        Payment updatedPayment = paymentService.setStatus(payment, PaymentStatus.SUCCESS.getValue());
+
+        assertEquals(PaymentStatus.SUCCESS.getValue(), updatedPayment.getStatus());
+        verify(orderService, times(1)).updateStatus(order.getId(), OrderStatus.SUCCESS.getValue());
+    }
+
+    @Test
     void testSetStatusToRejected(){
         Payment payment = payments.get(0);
 
         when(paymentRepository.getOrder(payment.getId())).thenReturn(order);
-
-        paymentService.setStatus(payment, PaymentStatus.SUCCESS.getValue());
-
-        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
-        assertEquals(OrderStatus.SUCCESS.getValue(), order.getStatus());
+        when(paymentRepository.save(any(Order.class), any(Payment.class))).thenReturn(payment);
+        when(orderService.updateStatus(anyString(), anyString())).thenReturn(order);
 
         Payment updatedPayment = paymentService.setStatus(payment, PaymentStatus.REJECTED.getValue());
 
         assertEquals(PaymentStatus.REJECTED.getValue(), updatedPayment.getStatus());
-        assertEquals(OrderStatus.FAILED.getValue(), order.getStatus());
-
-        verify(paymentRepository, times(2)).getOrder(payment.getId());
+        verify(orderService, times(1)).updateStatus(order.getId(), OrderStatus.FAILED.getValue());
     }
 
     @Test
