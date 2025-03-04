@@ -30,10 +30,10 @@ class PaymentTest {
 
     @Test
     void testCreatePaymentInvalidMethod() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "WOMP",
-                    paymentData);
-        });
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "WOMP",
+                paymentData);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
