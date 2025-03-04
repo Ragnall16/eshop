@@ -59,4 +59,52 @@ class PaymentTest {
             payment.setStatus("WOMP WOMP");
         });
     }
+
+    @Test
+    void testValidVoucherCode() {
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER",
+                paymentData);
+
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testInvalidSubFeature() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("notVoucher", "ISHOP1234ABC5678");
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER",
+                paymentData);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testVoucherCodeNotSixteenCharacters() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "1");
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER",
+                paymentData);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testVoucherCodeNotStartWithESHOP() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ISHOP1234ABC5678");
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER",
+                paymentData);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testVoucherCodeNotContainsEightNumbers() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOPABCDEFGHIJK");
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER",
+                paymentData);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
 }
