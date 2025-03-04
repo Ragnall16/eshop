@@ -64,14 +64,14 @@ class PaymentRepositoryTest {
     void testUpdateStatus() {
         Payment payment = payments.get(0);
         Payment result = paymentRepository.save(order, payment);
-        assertEquals("SUCCESS", result.getStatus());
-        assertEquals("SUCCESS", order.getStatus());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), result.getStatus());
+        assertEquals(OrderStatus.SUCCESS.getValue(), order.getStatus());
 
-        paymentRepository.update(payment, "REJECTED");
+        paymentRepository.update(payment, PaymentStatus.REJECTED.getValue());
         Payment findResult = paymentRepository.findById(payments.get(0).getId());
         Order findOrder = paymentRepository.getOrder(findResult.getId());
-        assertEquals("REJECTED", findResult.getStatus());
-        assertEquals("FAILED", findOrder.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), findResult.getStatus());
+        assertEquals(OrderStatus.FAILED.getValue(), findOrder.getStatus());
     }
 
     @Test
