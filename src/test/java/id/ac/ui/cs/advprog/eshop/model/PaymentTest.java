@@ -1,0 +1,61 @@
+package id.ac.ui.cs.advprog.eshop.model;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class PaymentTest {
+    private Order order;
+    private Map<String, String> paymentData;
+
+    @BeforeEach
+    void setUp(){
+        paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOP1234ABC5678");
+    }
+
+    @Test
+    void testCreatePayment(){
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER", paymentData);
+        assertEquals("79c3179f-e220-458e-9224-146466dec4ff", payment.getId());
+        assertEquals("VOUCHER", payment.getMethod());
+        assertEquals(paymentData, payment.getPaymentData());
+        assertEquals("SUCCESS", payment.getStatus());
+    }
+
+    @Test
+    void testCreatePaymentInvalidMethod() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "WOMP",
+                    paymentData);
+        });
+    }
+
+    @Test
+    void testCreatePaymentInvalidPaymentData() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER", null);
+        });
+    }
+
+    @Test
+    void testSetStatusToRejected() {
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER", paymentData);
+        payment.setStatus("REJECTED");
+
+        assertEquals("REJECTED", payment.getStatus());
+    }
+
+    @Test
+    void testSetStatusToInvalidStatus() {
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER", paymentData);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            payment.setStatus("WOMP WOMP");
+        });
+    }
+}
