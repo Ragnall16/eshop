@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
 import lombok.Getter;
 
 import java.util.Map;
@@ -38,12 +39,12 @@ public class Payment {
 
     private void validateData() {
         boolean isValid = false;
-        switch (this.method) {
-            case "VOUCHER":
+        switch (PaymentMethod.valueOf(method)) {
+            case PaymentMethod.VOUCHER:
                 isValid = validateVoucherMethod();
                 break;
 
-            case "BANK_TRANSFER":
+            case PaymentMethod.BANK_TRANSFER:
                 isValid = validateBankMethod();
                 break;
             default:
