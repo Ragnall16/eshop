@@ -14,15 +14,12 @@ public class Payment {
     String status;
 
     public Payment(String id, String method, Map<String, String> paymentData) {
-        if (method == null || method.trim().isEmpty()) {
-            throw new IllegalArgumentException();
-        }
         if (paymentData == null) {
             throw new IllegalArgumentException();
         }
 
         this.id = id;
-        this.method = method;
+        this.setMethod(method);
         this.paymentData = paymentData;
         this.validateData();
 
@@ -32,6 +29,14 @@ public class Payment {
     public void setStatus(String status) {
         if (PaymentStatus.contains(status)) {
             this.status = status;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void setMethod(String method) {
+        if (PaymentMethod.contains(method)) {
+            this.method = method;
         } else {
             throw new IllegalArgumentException();
         }
