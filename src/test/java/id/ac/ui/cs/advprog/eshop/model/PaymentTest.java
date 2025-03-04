@@ -107,4 +107,14 @@ class PaymentTest {
 
         assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
+
+    @Test
+    void testVoucherCodeIsNull() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", null);
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "VOUCHER",
+                paymentData);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
 }
