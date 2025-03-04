@@ -90,9 +90,9 @@ public class PaymentServiceImplTest {
         assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
         assertEquals(OrderStatus.SUCCESS.getValue(), order.getStatus());
 
-        paymentService.setStatus(payment, PaymentStatus.REJECTED.getValue());
+        Payment updatedPayment = paymentService.setStatus(payment, PaymentStatus.REJECTED.getValue());
 
-        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), updatedPayment.getStatus());
         assertEquals(OrderStatus.FAILED.getValue(), order.getStatus());
 
         verify(paymentRepository, times(2)).getOrder(payment.getId());
