@@ -117,4 +117,61 @@ class PaymentTest {
 
         assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
+
+    @Test
+    void testValidBankTransfer() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("bankName", "BCA");
+        paymentData.put("referenceCode", "FREE");
+        Payment payment = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "BANK_TRANSFER",
+                paymentData);
+
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testBankTransferEmptyNameOrRefCode() {
+        Map<String, String> paymentDataEmptyCode = new HashMap<>();
+        paymentDataEmptyCode.put("bankName", "BCA");
+        paymentDataEmptyCode.put("referenceCode", "");
+        Payment paymentEmptyCode = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "BANK_TRANSFER",
+                paymentDataEmptyCode);
+
+        Map<String, String> paymentDataEmptyName = new HashMap<>();
+        paymentDataEmptyName.put("bankName", "");
+        paymentDataEmptyName.put("referenceCode", "FREE");
+        Payment paymentEmptyName = new Payment("296227be-b3c4-421a-9990-8d74bd1a023a", "BANK_TRANSFER",
+                paymentDataEmptyName);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), paymentEmptyCode.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), paymentEmptyName.getStatus());
+    }
+
+    @Test
+    void testBankTransferNullNameOrRefCode() {
+        Map<String, String> paymentDataNullCode = new HashMap<>();
+        paymentDataNullCode.put("bankName", "BCA");
+        paymentDataNullCode.put("referenceCode", null);
+        Payment paymentNullCode = new Payment("79c3179f-e220-458e-9224-146466dec4ff", "BANK_TRANSFER",
+                paymentDataNullCode);
+
+        Map<String, String> paymentDataNullName = new HashMap<>();
+        paymentDataNullName.put("bankName", null);
+        paymentDataNullName.put("referenceCode", "FREE");
+        Payment paymentNullName = new Payment("296227be-b3c4-421a-9990-8d74bd1a023a", "BANK_TRANSFER",
+                paymentDataNullName);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), paymentNullCode.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), paymentNullName.getStatus());
+    }
+
+    @Test
+    void testBankTransferInvalidData() {
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOP1234ABC5678");
+        Payment payment = new Payment("296227be-b3c4-421a-9990-8d74bd1a023a", "BANK_TRANSFER",
+                paymentData);
+
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
 }
