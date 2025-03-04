@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.model.Order;
+import id.ac.ui.cs.advprog.eshop.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,16 @@ class PaymentRepositoryTest {
         paymentRepository = new PaymentRepository();
         payments = new ArrayList<>();
 
+        List<Product> products = new ArrayList<>();
+        Product product1 = new Product();
+        product1.setProductId("f583dcd4-1407-4acf-b109-dbf1191f4b19");
+        product1.setProductName("Sampo Cap Bambang");
+        product1.setProductQuantity(2);
+        products.add(product1);
+
+        order = new Order("abb00ecc-5453-4162-b4c5-53ac13364aff",
+                products, 1708560000L, "Me");
+
         Map<String, String > paymentData1 = new HashMap<>();
         paymentData1.put("voucherCode", "ESHOP1234ABC5678");
         Payment payment1 = new Payment("afd3f1f8-f058-43cc-9a75-16d0026366a6", "VOUCHER", paymentData1);
@@ -35,9 +46,6 @@ class PaymentRepositoryTest {
         paymentData2.put("voucherCode", "ESHOP1234ABC5679");
         Payment payment2 = new Payment("ed10f995-e93e-4194-932e-dd7b2c39ba9a", "VOUCHER", paymentData2);
         payments.add(payment2);
-
-        order = new Order("abb00ecc-5453-4162-b4c5-53ac13364aff",
-                null, 1708560000L, "Me");
     }
 
     @Test
