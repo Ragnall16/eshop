@@ -43,6 +43,9 @@ public class Payment {
                 isValid = validateVoucherMethod();
                 break;
 
+            case "BANK_TRANSFER":
+                isValid = validateBankMethod();
+                break;
             default:
                 break;
         }
@@ -89,5 +92,18 @@ public class Payment {
         }
 
         return true;
+    }
+
+    private boolean validateBankMethod() {
+        String bankName = paymentData.get("bankName");
+        String referenceCode = paymentData.get("referenceCode");
+
+        boolean isBankNameValid = bankName != null && !bankName.isEmpty();
+        boolean isReferenceCodeValid = referenceCode != null && !referenceCode.isEmpty();
+        if (isBankNameValid && isReferenceCodeValid) {
+            return true;
+        }
+
+        return false;
     }
 }
