@@ -9,7 +9,7 @@
 
 <div class="container">
     <h3>Create New Order</h3>
-    <a th:href="@{/order/history}" class="btn btn-primary mt-3">Order History</a>
+    <a th:href="@{/order/history?author=}" class="btn btn-primary mt-3">Order History</a>
 
     <form th:action="@{/order/create}" th:object="${order}" method="post">
         <div class="form-group">
@@ -19,7 +19,7 @@
 
         <div class="form-group">
             <label for="productsSelect">Select Products</label>
-            <select th:field="*{products}" multiple class="form-control mb-4 col-4" id="productsSelect">
+            <select name="products" multiple class="form-control mb-4 col-4" id="productsSelect">
                 <option th:each="product : ${productList}" th:value="${product.productId}" th:text="${product.productName}"></option>
             </select>
         </div>

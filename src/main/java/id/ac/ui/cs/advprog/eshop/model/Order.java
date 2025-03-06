@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
@@ -19,14 +20,9 @@ public class Order {
     public Order(String id, List<Product> products, Long orderTime, String author) {
         this.id = id;
         this.orderTime = orderTime;
+        this.products = (products != null) ? products : new ArrayList<>();
         this.author = author;
         this.status = OrderStatus.WAITING_PAYMENT.getValue();
-
-        if (products.isEmpty()) {
-            throw new IllegalArgumentException();
-        } else {
-            this.products = products;
-        }
     }
 
     public Order(String id, List<Product> products, Long orderTime, String author, String status) {

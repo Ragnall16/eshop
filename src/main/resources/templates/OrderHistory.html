@@ -21,7 +21,6 @@
             <th scope="col">Order Time</th>
             <th scope="col">Status</th>
             <th scope="col">Products</th>
-            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -33,9 +32,6 @@
                 <ul>
                     <li th:each="product : ${order.products}" th:text="${product.productName} + ' (' + ${product.productQuantity} + ')'"></li>
                 </ul>
-            </td>
-            <td>
-                <a th:href="@{/order/details/{orderId}(orderId=${order.id})}" class="btn btn-info btn-sm">View</a>
             </td>
         </tr>
         </tbody>
