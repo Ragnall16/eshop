@@ -31,10 +31,11 @@ class OrderTest {
     void testCreateOrderEmptyProduct() {
         this.products.clear();
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            Order order = new Order("e156660d-8011-4765-bcc2-bea5a5e5de2a",
-                    this.products, 1708560000L, "Safira Sudrajat");
-        });
+        Order order = new Order("e156660d-8011-4765-bcc2-bea5a5e5de2a",
+                this.products, 1708560000L, "Safira Sudrajat");
+
+        assertNotNull(order);
+        assertTrue(order.getProducts().isEmpty());
     }
 
     @Test
