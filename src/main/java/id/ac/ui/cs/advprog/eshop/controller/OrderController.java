@@ -63,13 +63,12 @@ public class OrderController {
     @GetMapping("/pay/{orderId}")
     public String payOrderPage(@PathVariable String orderId, Model model) {
         Order order = orderService.findById(orderId);
-        if (order == null) {
-            return "redirect:/error"; // Or your error page
-        }
+
         model.addAttribute("order", order);
         return "PaymentOrder";
     }
 
+    @PostMapping("/pay/{orderId}")
     public String payOrder(@PathVariable String orderId,
                            @RequestParam String method,
                            @RequestParam(required = false) String bankName,
@@ -89,6 +88,6 @@ public class OrderController {
         }
         Payment payment = paymentService.addPayment(order, method, paymentData);
         model.addAttribute("paymentId", payment.getId());
-        return "PaymentConfirmation";
+        return "redirect:/payment/detail/" + payment.getId();
     }
 }

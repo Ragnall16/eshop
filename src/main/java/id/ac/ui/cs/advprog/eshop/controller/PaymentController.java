@@ -52,6 +52,8 @@ public class PaymentController {
     public String setPaymentStatus(@PathVariable String paymentId, @RequestParam String status) {
         Payment payment = paymentService.getPayment(paymentId);
 
+        paymentService.setStatus(payment, status);
+
         return "redirect:/payment/admin/detail/" + paymentId;
     }
 }
