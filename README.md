@@ -17,6 +17,7 @@ Ragnall Muhammad Al Fath ~ 2306210550 ~ AdPro B
 [Reflection 2](#Reflection-2) <br>
 [Reflection 3](#Reflection-3) (Module 2 Reflection) <br>
 [Reflection 4](#Reflection-4) (Module 3 Reflection) <br>
+[Reflection 5](#Reflection-5) (Module 4 Reflection) <br>
 
 </strong>
 
@@ -104,7 +105,7 @@ If the test data is hardcoded in multiple places, it becomes harder to maintain.
 ### 1. Group dependencies by their destination 
 
 Previous Code
-```Java
+```
 // build.gradle.kts
 
 dependencies {
@@ -358,5 +359,44 @@ I think there are three main ones:
    
 5. DIP: If controllers directly depended on concrete implementations, changing the database or adding caching layers would require modifying the controllers, leading to tight coupling and less flexibility.
 
+
+---
+
+## Reflection 5
+
+### 1. Usefulness of TDD Flow
+1. **Feedback Speed:** The TDD flow is helpful, but sometimes feedback cycles feel slow, especially when running every test. 
+To improve, I could optimize my test execution strategy by running only relevant tests during development.
+
+2. **Faster Integration Test:** Since the tests are made for every "module" of Order, 
+I think the test is already good. The tutorial also uses mocking dependencies which makes the tests run faster by avoiding actual database interactions.
+
+3. **Running Subset of Tests:** While Intellij IDEA provides ways to only run the test that I am working on,
+for this tutorial I didn't utilize it and I need to remember to do that in future TDD.
+
+4. **Time Waiting for Tests:** I did run all tests instead of the "current" test,
+but the time I waited is very minimal (because the number of tests are small), so I think that part is fine
+
+### 2. FIRST Principle
+1. **Fast:** Because the tests uses Mockito, the tests run fast.
+But, if there are too many test that involves database operation, it might slow down
+
+2. **Isolated/Independent:** The correctness of some test depend on the correctness of the test before it.
+This is not good because some test might have the correct logic but because the test before is wrong, 
+that test also fails.
+
+3. **Repeatable:** Using Mockito ensures that tests do not rely on external systems, making them consistent and repeatable. 
+Since mocks always return predefined values, test results will not change unpredictably.
+
+4. **Self-Validating:** Overall it follows this principle,
+but it can be improved by adding failure message to make it more clear
+
+5. **Thorough/Timely:** The tests follow this principle. Following the TDD cycle,
+with failing tests [RED], implement features until tests passes [GREEN],
+then refactor code [REFACTOR]
+
+In Future TDD, I need to make sure that each test is fully independent of each other, 
+while using as little database operation as possible, and adding failure message to make the code more clear.
+Of course not forgetting the principles that I have done correctly.
 
 ---
