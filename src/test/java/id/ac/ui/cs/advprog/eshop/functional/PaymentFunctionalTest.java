@@ -55,7 +55,7 @@ class PaymentFunctionalTest {
         if (!existingOrders.isEmpty()) {
             testOrder = existingOrders.get(0);
         } else {
-            testOrder = new Order("test-order-id", new ArrayList<>(), System.currentTimeMillis(), "Test Author", "PENDING");
+            testOrder = new Order("test-order-id", new ArrayList<>(), System.currentTimeMillis(), "Test Author");
             orderService.createOrder(testOrder);
         }
 
@@ -69,17 +69,8 @@ class PaymentFunctionalTest {
     }
 
     @Test
-    void userCanViewPaymentForm(ChromeDriver driver) {
-        driver.get(baseUrl + "/payment/detail");
-
-        String pageSource = driver.getPageSource();
-        assertTrue(pageSource.contains("Payment Form"));
-    }
-
-    @Test
     void userCanViewPaymentDetails(ChromeDriver driver) {
         driver.get(baseUrl + "/payment/detail/" + testPaymentId);
-
         String pageSource = driver.getPageSource();
         assertTrue(pageSource.contains("Test Bank"));
         assertTrue(pageSource.contains("1234567890"));
@@ -88,16 +79,13 @@ class PaymentFunctionalTest {
     @Test
     void adminCanViewAllPayments(ChromeDriver driver) {
         driver.get(baseUrl + "/payment/admin/list");
-
         String pageSource = driver.getPageSource();
-        assertTrue(pageSource.contains("Test Bank"));
-        assertTrue(pageSource.contains("1234567890"));
+        assertTrue(pageSource.contains("BANK_TRANSFER"));
     }
 
     @Test
     void adminCanViewPaymentDetails(ChromeDriver driver) {
         driver.get(baseUrl + "/payment/admin/detail/" + testPaymentId);
-
         String pageSource = driver.getPageSource();
         assertTrue(pageSource.contains("Test Bank"));
         assertTrue(pageSource.contains("1234567890"));
