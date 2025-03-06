@@ -1,15 +1,19 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
+import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.OrderService;
+import id.ac.ui.cs.advprog.eshop.service.PaymentService;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -18,11 +22,13 @@ public class OrderController {
 
     private final OrderService orderService;
     private final ProductService productService;
+    private final PaymentService paymentService;
 
     @Autowired
-    public OrderController(OrderService orderService, ProductService productService) {
+    public OrderController(OrderService orderService, ProductService productService, PaymentService paymentService) {
         this.orderService = orderService;
         this.productService = productService;
+        this.paymentService = paymentService;
     }
 
     @GetMapping("/create")
@@ -52,5 +58,37 @@ public class OrderController {
         List<Order> orders = orderService.findAllByAuthor(author);
         model.addAttribute("orders", orders);
         return "OrderHistory";
+    }
+
+    @GetMapping("/pay/{orderId}")
+    public String payOrderPage(@PathVariable String orderId, Model model) {
+        Order order = orderService.findById(orderId);
+        if (order == null) {
+            return "redirect:/error"; // Or your error page
+        }
+        model.addAttribute("order", order);
+        return "PaymentOrder";
+    }
+
+    public String payOrder(@PathVariable String orderId,
+                           @RequestParam String method,
+                           @RequestParam(required = false) String bankName,
+                           @RequestParam(required = false) String referenceCode,
+                           @RequestParam(required = false) String voucherCode,
+                           Model model) {
+        Order order = orderService.findById(orderId);
+        if (order == null) {
+            return "redirect:/error";
+        }
+        Map<String, String> paymentData = new HashMap<>();
+        if (method.equalsIgnoreCase("VOUCHER")) {
+            paymentData.put("voucherCode", voucherCode);
+        } else if (method.equalsIgnoreCase("BANK_TRANSFER")) {
+            paymentData.put("bankName", bankName);
+            paymentData.put("referenceCode", referenceCode);
+        }
+        Payment payment = paymentService.addPayment(order, method, paymentData);
+        model.addAttribute("paymentId", payment.getId());
+        return "PaymentConfirmation";
     }
 }
