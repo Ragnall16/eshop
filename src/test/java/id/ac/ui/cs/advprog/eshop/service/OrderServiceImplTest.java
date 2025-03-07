@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -85,23 +84,28 @@ class OrderServiceTest {
     @Test
     void testUpdateStatusInvalidStatus(){
         Order order = orders.get(1);
-        doReturn(order).when(orderRepository).findById(order.getId());
+        String orderId = order.getId();
+        doReturn(order).when(orderRepository).findById(orderId);
 
         assertThrows(IllegalArgumentException.class,
-                () -> orderService.updateStatus(order.getId(), "MEOW"));
+                () -> orderService.updateStatus(orderId, "MEOW"));
 
         verify(orderRepository, times(0)).save(any(Order.class));
     }
+
 
     @Test
     void testUpdateStatusInvalidOrderId(){
-        doReturn(null).when(orderRepository).findById("zczc");
+        String invalidOrderId = "zczc";
+        String successStatus = OrderStatus.SUCCESS.getValue();
+        doReturn(null).when(orderRepository).findById(invalidOrderId);
 
         assertThrows(NoSuchElementException.class,
-                () -> orderService.updateStatus("zczc", OrderStatus.SUCCESS.getValue()));
+                () -> orderService.updateStatus(invalidOrderId, successStatus));
 
         verify(orderRepository, times(0)).save(any(Order.class));
     }
+
 
     @Test
     void testFindByIdIfIdFound(){
