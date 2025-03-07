@@ -8,37 +8,38 @@ import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
+    private final OrderService orderService;
 
-    @Autowired
-    OrderService orderService;
+
+    public PaymentServiceImpl(PaymentRepository paymentRepository, OrderService orderService) {
+        this.paymentRepository = paymentRepository;
+        this.orderService = orderService;
+    }
 
     @Override
-    public Payment addPayment(Order order, String method, Map<String, String> paymentData){
+    public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
         String paymentId = UUID.randomUUID().toString();
         Payment payment = new Payment(paymentId, method, paymentData);
         return paymentRepository.save(order, payment);
     }
 
     @Override
-    public Payment setStatus(Payment payment, String status){
+    public Payment setStatus(Payment payment, String status) {
         Order order = paymentRepository.getOrder(payment.getId());
         payment.setStatus(status);
 
         if (status.equals(PaymentStatus.SUCCESS.getValue())) {
-            order = orderService.updateStatus(order.getId() ,OrderStatus.SUCCESS.getValue());
+            order = orderService.updateStatus(order.getId(), OrderStatus.SUCCESS.getValue());
         } else if (status.equals(PaymentStatus.REJECTED.getValue())) {
-            order = orderService.updateStatus(order.getId() ,OrderStatus.FAILED.getValue());
+            order = orderService.updateStatus(order.getId(), OrderStatus.FAILED.getValue());
         } else {
             throw new IllegalArgumentException();
         }
@@ -47,12 +48,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment getPayment(String paymentId){
+    public Payment getPayment(String paymentId) {
         return paymentRepository.findById(paymentId);
     }
 
     @Override
-    public List<Payment> getAllPayments(){
+    public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
     }
 }

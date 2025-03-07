@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PaymentServiceImplTest {
+class PaymentServiceImplTest {
 
     @InjectMocks
     PaymentServiceImpl paymentService;
@@ -136,7 +136,6 @@ public class PaymentServiceImplTest {
 
     @Test
     void testGetAllPayments(){
-        Payment payment = payments.get(1);
         doReturn(payments).when(paymentRepository).findAll();
 
         List<Payment> results = paymentService.getAllPayments();

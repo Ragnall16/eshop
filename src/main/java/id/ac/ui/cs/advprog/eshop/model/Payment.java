@@ -22,8 +22,6 @@ public class Payment {
         this.setMethod(method);
         this.paymentData = paymentData;
         this.validateData();
-
-
     }
 
     public void setStatus(String status) {
@@ -45,46 +43,28 @@ public class Payment {
     private void validateData() {
         boolean isValid = false;
         switch (PaymentMethod.valueOf(method)) {
-            case PaymentMethod.VOUCHER:
+            case VOUCHER:
                 isValid = validateVoucherMethod();
                 break;
-
-            case PaymentMethod.BANK_TRANSFER:
+            case BANK_TRANSFER:
                 isValid = validateBankMethod();
                 break;
             default:
                 break;
         }
 
-        if (isValid) {
-            status = PaymentStatus.SUCCESS.getValue();
-        } else {
-            status = PaymentStatus.REJECTED.getValue();
-        }
+        this.status = isValid ? PaymentStatus.SUCCESS.getValue() : PaymentStatus.REJECTED.getValue();
     }
 
     private boolean validateVoucherMethod() {
         String voucherCode = paymentData.get("voucherCode");
-        if (voucherCode == null) {
-            return false;
-        }
-
-        if (checkVoucherCode(voucherCode)) {
-            return true;
-        }
-
-        return false;
+        return voucherCode != null && checkVoucherCode(voucherCode);
     }
 
     private boolean checkVoucherCode(String voucherCode) {
-        if (voucherCode.length() != 16) {
+        if (voucherCode.length() != 16 || !voucherCode.startsWith("ESHOP")) {
             return false;
         }
-
-        if (!voucherCode.startsWith("ESHOP")) {
-            return false;
-        }
-
         String code = voucherCode.substring(5);
         int numericCharCount = 0;
         for (char character : code.toCharArray()) {
@@ -92,24 +72,12 @@ public class Payment {
                 numericCharCount++;
             }
         }
-
-        if (numericCharCount != 8) {
-            return false;
-        }
-
-        return true;
+        return numericCharCount == 8;
     }
 
     private boolean validateBankMethod() {
         String bankName = paymentData.get("bankName");
         String referenceCode = paymentData.get("referenceCode");
-
-        boolean isBankNameValid = bankName != null && !bankName.isEmpty();
-        boolean isReferenceCodeValid = referenceCode != null && !referenceCode.isEmpty();
-        if (isBankNameValid && isReferenceCodeValid) {
-            return true;
-        }
-
-        return false;
+        return bankName != null && !bankName.isEmpty() && referenceCode != null && !referenceCode.isEmpty();
     }
 }

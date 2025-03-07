@@ -11,8 +11,11 @@ import java.util.NoSuchElementException;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+
+    public OrderServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     @Override
     public Order createOrder(Order order) {
@@ -39,10 +42,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(String orderId) {
         return orderRepository.findById(orderId);
-    };
+    }
 
     @Override
     public List<Order> findAllByAuthor(String author) {
         return orderRepository.findAllByAuthor(author);
-    };
+    }
 }

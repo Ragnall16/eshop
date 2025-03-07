@@ -64,7 +64,7 @@ class OrderTest {
     @Test
     void testCreateOrderInvalidStatus() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Order order = new Order("e156660d-8011-4765-bcc2-bea5a5e5de2a",
+            new Order("e156660d-8011-4765-bcc2-bea5a5e5de2a",
                     this.products, 1708560000L, "Safira Sudrajat", "MEOW");
         });
     }
